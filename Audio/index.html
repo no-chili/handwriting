@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <audio controls id="audio" src="./audio.mp3"></audio>
+  <button id="play">play</button>
+  <button id="load">load</button>
+  <h1 id="h1"></h1>
+</body>
+<style>
+
+</style>
+<script>
+    const h=document.getElementById('h1')
+    const load=document.getElementById('load')
+    load.addEventListener('click',()=>{
+        const play=document.getElementById('play')
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 512;
+
+        // 获取<audio>节点
+        const audio = document.getElementById('audio');
+        // 通过<audio>节点创建音频源
+        const source = ctx.createMediaElementSource(audio);
+        // 将音频源关联到分析器
+        source.connect(analyser);
+        // 将分析器关联到输出设备（耳机、扬声器）
+        analyser.connect(ctx.destination);
+
+        play.onclick=()=>{
+          audio.play()
+          setInterval(()=>{
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray)
+            h.innerText=dataArray[0]
+          },300)
+        }
+      })
+</script>
+</html>

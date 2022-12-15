@@ -9,6 +9,6 @@ export default function flat(arr){
     })
     return flatArr
 }
-const arr=['1',[null,'3',[undefined]]]
+const arr=['1',[null,'3',[undefined]],'5']
 const f = flat(arr)
 console.log(f);
